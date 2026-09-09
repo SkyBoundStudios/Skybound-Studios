@@ -34,7 +34,31 @@ const pages = {
     contact: () => pageHero('Open channel / 09', 'Let’s talk flight.', 'For press, collaboration, community, or just a good aviation story, send a signal our way.') + `<section class="section"><div class="content-grid"><div class="info-block"><div class="eyebrow">General</div><h3>hello@skybound.studio</h3><p>Studio questions, partnerships, and everything in between.</p></div><div class="info-block"><div class="eyebrow">Press</div><h3>press@skybound.studio</h3><p>Assets, interviews, and coverage requests.</p></div><div class="info-block"><div class="eyebrow">Community</div><h3>community@skybound.studio</h3><p>Feedback, bugs, and your best screenshot.</p></div></div></section><section class="section section-dark"><div class="dark-card"><div class="eyebrow">Message center</div><h3>We are keeping the inbox human.</h3><p>For now, email is the best way to reach the team. We read everything and reply when we can.</p><a class="button" href="mailto:hello@skybound.studio">Compose email <span>↗</span></a></div></section>`
 };
 
-function renderNav(route) { document.querySelector('.site-nav').innerHTML = navItems.map(([id, label]) => `<a href="#${id}" ${route === id ? 'aria-current="page"' : ''}>${label}</a>`).join(''); }
+const contactEmail = 'skyboundstudios@outlook.com';
+const teamMembers = [
+    { name: 'Alex Cook', role: 'Founder / Developer', department: 'Development', description: "Founder of Skybound Studios and involved in the development and direction of the studio's projects." },
+    { name: 'Alex Trimble', role: 'Team Member', department: 'Development', description: 'Member of the Skybound Studios development team.' },
+    { name: 'Neo.Aviation', role: 'Team Member', department: 'Aviation / Development', description: 'Member of the Skybound Studios team with an interest in aviation and flight simulation.' }
+];
+
+pages.team = () => pageHero('The crew / 05', 'Small team. Big horizon.', 'We are a focused group of developers and aviation enthusiasts building the future of flight.') + `<section class="section"><div class="team-grid">${teamMembers.map((member, index) => `<article class="team-card"><div class="avatar" aria-hidden="true">${member.name.split(' ').map(part => part[0]).join('').slice(0, 2).toUpperCase()}</div><div class="team-card-number">0${index + 1}</div><h3>${member.name}</h3><p class="team-role">${member.role}</p><p class="team-department">${member.department}</p><p class="team-description">${member.description}</p></article>`).join('')}</div></section>` + `<section class="section section-dark">${callout('Bring your point of view.', '#join-us', 'See open roles')}</section>`;
+pages.contact = () => pageHero('Open channel / 09', 'Let’s talk flight.', 'For press, collaboration, community, or just a good aviation story, send a signal our way.') + `<section class="section"><div class="contact-card"><div class="eyebrow">Official studio contact</div><h2><a href="mailto:${contactEmail}">${contactEmail}</a></h2><p>For studio questions, partnerships, press, community feedback, and everything in between.</p><a class="button" href="mailto:${contactEmail}">Compose email <span>↗</span></a></div></section>`;
+
+function renderNav(route) {
+    const projectsActive = route === 'projects' || route === 'skybound';
+    document.querySelector('.site-nav').innerHTML = `
+        <a href="#home" ${route === 'home' ? 'aria-current="page"' : ''}>Home</a>
+        <div class="nav-dropdown">
+            <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true" ${projectsActive ? 'aria-current="page"' : ''}>Projects <span aria-hidden="true">⌄</span></button>
+            <div class="nav-dropdown-menu">
+                <a href="#projects" ${route === 'projects' ? 'aria-current="page"' : ''}><span>01</span>Projects</a>
+                <a href="#skybound" ${route === 'skybound' ? 'aria-current="page"' : ''}><span>02</span>Skybound</a>
+            </div>
+        </div>
+        ${[['development', 'Development'], ['team', 'Team'], ['media', 'Media'], ['community', 'Community']].map(([id, label]) => `<a href="#${id}" ${route === id ? 'aria-current="page"' : ''}>${label}</a>`).join('')}
+        <a class="mobile-join" href="#join-us" ${route === 'join-us' ? 'aria-current="page"' : ''}>Join Us <span aria-hidden="true">→</span></a>`;
+    document.querySelector('.header-cta').href = '#join-us';
+}
 function render() {
     const requested = window.location.hash.slice(1) || 'home';
     const route = requested === 'about' ? 'team' : requested;
@@ -45,6 +69,7 @@ function render() {
     document.querySelector('#app').focus({ preventScroll: true });
     document.querySelector('.site-nav').classList.remove('open');
     document.querySelector('.menu-toggle').setAttribute('aria-expanded', 'false');
+    document.querySelector('.menu-toggle').setAttribute('aria-label', 'Open navigation');
     window.scrollTo(0, 0);
 }
 
@@ -52,6 +77,33 @@ document.querySelector('.menu-toggle').addEventListener('click', () => {
     const nav = document.querySelector('.site-nav');
     const open = nav.classList.toggle('open');
     document.querySelector('.menu-toggle').setAttribute('aria-expanded', String(open));
+    document.querySelector('.menu-toggle').setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
 });
+document.querySelector('[data-header]').addEventListener('click', (event) => {
+    const toggle = event.target.closest('.nav-dropdown-toggle');
+    if (!toggle) return;
+    const dropdown = toggle.closest('.nav-dropdown');
+    const open = dropdown.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+});
+document.addEventListener('click', (event) => {
+    if (!event.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(dropdown => {
+            dropdown.classList.remove('open');
+            dropdown.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded', 'false');
+        });
+    }
+});
+document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    document.querySelectorAll('.nav-dropdown.open').forEach(dropdown => {
+        dropdown.classList.remove('open');
+        dropdown.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded', 'false');
+    });
+});
+const header = document.querySelector('[data-header]');
+const updateHeaderState = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
+window.addEventListener('scroll', updateHeaderState, { passive: true });
+updateHeaderState();
 window.addEventListener('hashchange', render);
 render();
