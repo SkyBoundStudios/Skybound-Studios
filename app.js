@@ -72,6 +72,26 @@ function renderNav(route) {
         <a class="mobile-join" href="#join-us" ${route === 'join-us' ? 'aria-current="page"' : ''}>Join Us <span aria-hidden="true">→</span></a>`;
     document.querySelector('.header-cta').href = '#join-us';
 }
+function showHomepageUpdate() {
+    document.querySelector('.update-modal')?.remove();
+    const modal = document.createElement('div');
+    modal.className = 'update-modal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'update-title');
+    modal.innerHTML = `<div class="update-modal-backdrop" data-update-close></div><article class="update-modal-card"><button class="update-modal-close" type="button" aria-label="Close update message" data-update-close>×</button><div class="eyebrow">Studio transmission / 0.1.1</div><h2 id="update-title">A new flight plan.</h2><p>Update 0.1.1 introduces the refreshed Skybound Studios homepage, a sharper studio showcase, current team information, and a clearer path into the world of Skybound.</p><a class="button" href="#development" data-update-close>See development updates <span>→</span></a></article>`;
+    document.body.appendChild(modal);
+    const close = () => modal.remove();
+    modal.querySelectorAll('[data-update-close]').forEach(element => element.addEventListener('click', close));
+    const handleEscape = event => {
+        if (event.key === 'Escape') {
+            close();
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+    window.setTimeout(() => modal.classList.add('is-visible'), 650);
+}
 function render() {
     const requested = window.location.hash.slice(1) || 'home';
     const route = requested === 'about' ? 'team' : requested;
@@ -94,6 +114,7 @@ function render() {
     document.querySelector('.menu-toggle').setAttribute('aria-expanded', 'false');
     document.querySelector('.menu-toggle').setAttribute('aria-label', 'Open navigation');
     window.scrollTo(0, 0);
+    if (route === 'home') showHomepageUpdate();
 }
 
 document.querySelector('.menu-toggle').addEventListener('click', () => {
