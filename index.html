@@ -3,10 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skybound Studios</title>
+    <meta name="description" content="Skybound Studios is building the skies of tomorrow with Skybound, a next-generation flight simulation game.">
+    <title>Skybound Studios | Building the skies of tomorrow.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Skybound Studios</h1>
-    <p>Building the skies of tomorrow.</p>
+    <div class="site-shell">
+        <header class="site-header" data-header>
+            <a class="brand" href="#home" aria-label="Skybound Studios home">
+                <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+                <span>SKYBOUND <b>STUDIOS</b></span>
+            </a>
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+            <nav class="site-nav" id="site-nav" aria-label="Primary navigation"></nav>
+            <a class="header-cta" href="#contact">Get in touch <span aria-hidden="true">↗</span></a>
+        </header>
+        <main id="app" tabindex="-1"></main>
+        <footer class="site-footer">
+            <div class="footer-top">
+                <a class="brand" href="#home" aria-label="Skybound Studios home">
+                    <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+                    <span>SKYBOUND <b>STUDIOS</b></span>
+                </a>
+                <p>Independent developers building meaningful worlds above the clouds.</p>
+                <a class="footer-arrow" href="#contact" aria-label="Contact Skybound Studios">↗</a>
+            </div>
+            <div class="footer-bottom"><span>© 2026 Skybound Studios</span><span>Made for the curious.</span><span>EST. 2024 / EARTH</span></div>
+        </footer>
+    </div>
+    <script src="app.js"></script>
 </body>
 </html>
